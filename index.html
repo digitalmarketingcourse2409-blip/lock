@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VIT Chennai Smart Lock Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand-block">
+        <div class="brand-logo" aria-hidden="true"><span>VIT</span></div>
+        <div>
+          <p class="eyebrow">Smart Security Console</p>
+          <h1>VIT Chennai Campus</h1>
+          <p class="brand-copy">Multi-layer smart lock monitoring dashboard</p>
+        </div>
+      </div>
+
+      <nav class="menu">
+        <button class="menu-item active" data-target="dashboard">Dashboard</button>
+        <button class="menu-item" data-target="enrollment">Enrollment</button>
+        <button class="menu-item" data-target="logs">Log Time</button>
+      </nav>
+
+      <div class="sidebar-card">
+        <p class="sidebar-label">MQTT Broker</p>
+        <p class="sidebar-value">u660b616.ala.eu-central-1.emqxsl.com</p>
+        <p class="sidebar-label">Topic</p>
+        <p class="sidebar-value">lock/#</p>
+      </div>
+    </aside>
+
+    <main class="content">
+      <header class="topbar">
+        <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">☰</button>
+        <div>
+          <p class="eyebrow">Live Status</p>
+          <h2>Smart Lock Access Panel</h2>
+        </div>
+        <div class="connection-pill" id="connectionPill">Connecting...</div>
+      </header>
+
+      <section class="panel active" id="dashboard">
+        <div class="hero">
+          <div>
+            <p class="eyebrow">Security Chain</p>
+            <h3>All four checks must turn green before the relay unlocks.</h3>
+            <p class="hero-copy">Key, NFC, fingerprint, and vein statuses are tracked individually from the ESP32 through EMQX MQTT.</p>
+          </div>
+          <div class="state-badge" id="overallState">LOCKED</div>
+        </div>
+
+        <div class="grid">
+          <article class="status-card status-red" id="card-key">
+            <p class="card-label">Key Status</p>
+            <h4 id="value-key">Waiting</h4>
+            <span id="time-key">No update yet</span>
+          </article>
+          <article class="status-card status-red" id="card-nfc">
+            <p class="card-label">NFC Status</p>
+            <h4 id="value-nfc">Waiting</h4>
+            <span id="time-nfc">No update yet</span>
+          </article>
+          <article class="status-card status-red" id="card-fingerprint">
+            <p class="card-label">Fingerprint Status</p>
+            <h4 id="value-fingerprint">Waiting</h4>
+            <span id="time-fingerprint">No update yet</span>
+          </article>
+          <article class="status-card status-red" id="card-vein">
+            <p class="card-label">Vein Status</p>
+            <h4 id="value-vein">Waiting</h4>
+            <span id="time-vein">No update yet</span>
+          </article>
+        </div>
+
+        <div class="dashboard-lower">
+          <section class="info-card">
+            <p class="section-label">Relay</p>
+            <h4 id="relayText">Locked</h4>
+            <p id="systemMessage">System waiting for retained MQTT updates...</p>
+          </section>
+          <section class="info-card">
+            <p class="section-label">Latest Event</p>
+            <h4 id="latestEvent">No events yet</h4>
+            <p id="latestEventTime">Waiting for ESP32...</p>
+          </section>
+        </div>
+      </section>
+
+      <section class="panel" id="enrollment">
+        <div class="split-card">
+          <div>
+            <p class="section-label">Fingerprint Enrollment</p>
+            <h3>Run enrollment only when the key switch is OFF.</h3>
+            <p class="hero-copy">The ESP32 will publish live steps like place finger, remove finger, place again, and success or failure.</p>
+          </div>
+          <button class="primary-button" id="enrollButton">Start Enrollment</button>
+        </div>
+
+        <div class="info-card enrollment-flow">
+          <p class="section-label">Enrollment Progress</p>
+          <h4 id="enrollState">Idle</h4>
+          <p id="enrollDetail">No enrollment command sent yet.</p>
+        </div>
+      </section>
+
+      <section class="panel" id="logs">
+        <div class="split-card">
+          <div>
+            <p class="section-label">Log Time</p>
+            <h3>Lock and unlock events are saved in this browser with timestamps.</h3>
+            <p class="hero-copy">Live MQTT log messages are appended here. The latest ESP32 log is also mirrored as a retained topic.</p>
+          </div>
+          <button class="secondary-button" id="clearLogs">Clear Log History</button>
+        </div>
+
+        <div class="log-list" id="logList">
+          <div class="log-empty">No log entries yet.</div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>
